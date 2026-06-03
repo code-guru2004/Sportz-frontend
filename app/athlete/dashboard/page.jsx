@@ -49,7 +49,7 @@ export default function AthleteDashboard() {
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
-    } else if (!loading && user && !user.isApproved) {
+    } else if (!loading && user && user.approvelStatus === "PENDING") {
       router.push("/waiting-approval");
     } else if (!loading && user && !user.profileCompleted) {
       router.push("/complete-profile");

@@ -21,13 +21,13 @@ export default function OverviewTab({ analytics }) {
     },
     {
       title: "Active Athletes",
-      value: analytics.activeAthletes || 0,
+      value: analytics.totalAthletes || 0,
       icon: UserCheck,
       color: "from-[#d4af64] to-[#c49a40]",
     },
     {
       title: "Active Coaches",
-      value: analytics.activeCoaches || 0,
+      value: analytics.totalCoaches || 0,
       icon: TrendingUp,
       color: "from-[#d4af64] to-[#c49a40]",
     },
@@ -69,7 +69,7 @@ export default function OverviewTab({ analytics }) {
           </div>
         ))}
       </div>
-
+      
       {/* Recent Activity placeholder */}
       <div className="bg-[#0f0f12] border border-[rgba(212,175,100,0.1)] rounded-xl p-6">
         <h3 className="font-display text-lg font-medium text-[#f0e6c8] mb-4">

@@ -40,7 +40,7 @@ export default function CoachesTab({ coaches, onViewUser, onBlockUser, onDeleteU
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
           {coaches.map((coach) => (
             <div
-              key={coach._id}
+              key={coach.id}
               className="bg-[#0c0c0e] border border-[rgba(212,175,100,0.08)] rounded-xl p-5 hover:border-[rgba(212,175,100,0.25)] hover:shadow-[0_4px_20px_rgba(212,175,100,0.05)] transition-all duration-300 group"
             >
               {/* Header with Avatar */}
@@ -130,7 +130,7 @@ export default function CoachesTab({ coaches, onViewUser, onBlockUser, onDeleteU
               {/* Action Buttons */}
               <div className="flex gap-2 pt-3 border-t border-[rgba(212,175,100,0.05)]">
                 <button
-                  onClick={() => onViewUser(coach._id)}
+                  onClick={() => onViewUser(coach.id)}
                   className="flex-1 px-3 py-2 text-sm font-body text-[rgba(240,230,200,0.7)] border border-[rgba(212,175,100,0.2)] rounded-lg hover:border-[rgba(212,175,100,0.4)] hover:text-[#d4af64] hover:bg-[rgba(212,175,100,0.05)] transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Eye className="w-4 h-4" />
@@ -138,7 +138,7 @@ export default function CoachesTab({ coaches, onViewUser, onBlockUser, onDeleteU
                 </button>
                 
                 <button
-                  onClick={() => onBlockUser(coach._id)}
+                  onClick={() => onBlockUser(coach.id)}
                   className={`flex-1 px-3 py-2 text-sm font-body rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
                     coach.isBlocked
                       ? "bg-[rgba(52,199,89,0.1)] text-[#4ade80] border border-[rgba(52,199,89,0.2)] hover:bg-[rgba(52,199,89,0.15)]"
@@ -150,7 +150,7 @@ export default function CoachesTab({ coaches, onViewUser, onBlockUser, onDeleteU
                 </button>
                 
                 <button
-                  onClick={() => onDeleteUser(coach._id)}
+                  onClick={() => onDeleteUser(coach.id)}
                   className="px-3 py-2 text-sm font-body bg-[rgba(255,100,100,0.1)] text-[#fc8181] border border-[rgba(255,100,100,0.2)] rounded-lg hover:bg-[rgba(255,100,100,0.15)] transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Trash2 className="w-4 h-4" />

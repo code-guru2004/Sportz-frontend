@@ -25,10 +25,10 @@ export default function SchedulesTab({ schedules, accessToken, onRefresh }) {
   };
 
   const handleSendNotification = async (schedule) => {
-    setSendingId(schedule._id);
+    setSendingId(schedule.id);
     
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/users?role=ATHLETE&isApproved=true&sport=${schedule.sport}`, {
+      const response = await axios.get(`${API_BASE_URL}/admin/users?role=ATHLETE&approvelStatus=PENDING&sport=${schedule.sport}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -36,11 +36,11 @@ export default function SchedulesTab({ schedules, accessToken, onRefresh }) {
       const athletes = response.data.users;
       
       const notifications = athletes.map(athlete => ({
-        userId: athlete._id,
+        userId: athlete.id,
         title: "New Training Schedule Available",
         message: `A new ${schedule.sport.toLowerCase()} training session "${schedule.title}" has been scheduled on ${new Date(schedule.date).toLocaleDateString()} at ${schedule.time}. Location: ${schedule.location}`,
         type: "SCHEDULE",
-        metadata: { scheduleId: schedule._id }
+        metadata: { scheduleId: schedule.id }
       }));
       
       for (const notification of notifications) {
@@ -95,7 +95,7 @@ export default function SchedulesTab({ schedules, accessToken, onRefresh }) {
         <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
           {schedules.map((schedule) => (
             <div
-              key={schedule._id}
+              key={schedule.id}
               className="bg-[#0c0c0e] border border-[rgba(212,175,100,0.08)] rounded-xl p-5 hover:border-[rgba(212,175,100,0.25)] hover:shadow-[0_4px_20px_rgba(212,175,100,0.05)] transition-all duration-300 group"
             >
               <div className="flex flex-col lg:flex-row justify-between gap-4">
@@ -113,7 +113,7 @@ export default function SchedulesTab({ schedules, accessToken, onRefresh }) {
                         {getStatusBadge(schedule.status)}
                       </div>
                       <p className="text-xs text-[rgba(212,175,100,0.6)] font-body mt-0.5">
-                        ID: {schedule._id.slice(-8)}
+                        ID: {schedule.id.slice(-8)}
                       </p>
                     </div>
                   </div>
@@ -162,10 +162,10 @@ export default function SchedulesTab({ schedules, accessToken, onRefresh }) {
                 <div className="flex lg:flex-col gap-2 lg:justify-center">
                   <button
                     onClick={() => handleSendNotification(schedule)}
-                    disabled={sendingId === schedule._id}
+                    disabled={sendingId === schedule.id}
                     className="px-4 py-2 text-sm font-body bg-gradient-to-r from-[#d4af64] to-[#c49a40] text-[#0c0c0e] rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
                   >
-                    {sendingId === schedule._id ? (
+                    {sendingId === schedule.id ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
                         Sending...

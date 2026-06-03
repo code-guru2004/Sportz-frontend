@@ -41,7 +41,7 @@ export default function NotificationSheet({ open, setOpen }) {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setNotifications(prev =>
-        prev.map(n => n._id === notificationId ? { ...n, read: true } : n)
+        prev.map(n => n.id === notificationId ? { ...n, read: true } : n)
       );
     } catch (error) {
       console.error("Error marking notification as read:", error);
@@ -136,7 +136,7 @@ export default function NotificationSheet({ open, setOpen }) {
             <div className="divide-y divide-[rgba(212,175,100,0.05)]">
               {notifications.map((notification) => (
                 <div
-                  key={notification._id}
+                  key={notification.id}
                   className={`relative p-4 hover:bg-[rgba(212,175,100,0.03)] transition-all duration-200 ${
                     !notification.read ? "bg-[rgba(212,175,100,0.02)]" : ""
                   }`}
@@ -159,8 +159,8 @@ export default function NotificationSheet({ open, setOpen }) {
                         </h4>
                         {!notification.read && (
                           <button
-                            onClick={() => markAsRead(notification._id)}
-                            disabled={markingAsRead === notification._id}
+                            onClick={() => markAsRead(notification.id)}
+                            disabled={markingAsRead === notification.id}
                             className="flex-shrink-0 p-1 rounded text-[rgba(212,175,100,0.4)] hover:text-[#d4af64] hover:bg-[rgba(212,175,100,0.1)] transition-all"
                             title="Mark as read"
                           >

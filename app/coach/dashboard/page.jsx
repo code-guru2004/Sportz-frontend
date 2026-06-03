@@ -229,7 +229,7 @@ export default function CoachDashboard() {
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");
-    else if (!loading && user && !user.isApproved) router.push("/waiting-approval");
+    else if (!loading && user && user.approvelStatus === "PENDING") router.push("/waiting-approval");
     else if (!loading && user && !user.profileCompleted) router.push("/complete-profile");
   }, [user, loading, router]);
 
@@ -282,7 +282,7 @@ export default function CoachDashboard() {
     try {
       const res = await axios.delete(`${API_BASE_URL}/schedules/${scheduleId}`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true });
       if (res.data.success) {
-        setSchedules(s => s.filter(x => x._id !== scheduleId));
+        setSchedules(s => s.filter(x => x.id !== scheduleId));
         setDeleteModal(null);
         fetchCoachDashboardStats();
         toast.success("Schedule deleted successfully!");
@@ -378,7 +378,7 @@ export default function CoachDashboard() {
                 <p className="text-[0.6875rem] font-medium tracking-[0.14em] uppercase text-[#d4af64] mb-2">Coach Dashboard</p>
                 <h1 className="text-[2.25rem] font-light leading-[1.1] text-[#f0e6c8] mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   Welcome back,{" "}
-                  <em className="italic text-[#d4af64]">{displayProfile?.fullName?.split(" ")[0] || user?.username}</em>
+                  <em className="italic text-[#d4af64]">@{displayProfile?.fullName?.split(" ")[0] || user?.username}</em>
                 </h1>
                 <p className="text-[0.875rem] text-[rgba(240,230,200,0.4)] font-light">
                   Manage your athletes, track progress, and build training schedules.
@@ -530,7 +530,7 @@ export default function CoachDashboard() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredPlayers.map(player => (
-                    <div key={player._id} className="group rounded-xl border border-[rgba(240,230,200,0.08)] bg-[#0f0f12] p-5 hover:border-[rgba(212,175,100,0.2)] transition-all duration-200">
+                    <div key={player.id} className="group rounded-xl border border-[rgba(240,230,200,0.08)] bg-[#0f0f12] p-5 hover:border-[rgba(212,175,100,0.2)] transition-all duration-200">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="w-10 h-10 rounded-xl bg-[rgba(212,175,100,0.07)] border border-[rgba(212,175,100,0.15)] flex items-center justify-center text-[rgba(240,230,200,0.3)] flex-shrink-0">
                           <Icon.User size={16} />
@@ -595,7 +595,7 @@ export default function CoachDashboard() {
                 <div className="flex flex-col gap-3">
                   {schedules.map(schedule => (
                     <div
-                      key={schedule._id}
+                      key={schedule.id}
                       className="group rounded-xl border border-[rgba(240,230,200,0.08)] bg-[#0f0f12] p-5 hover:border-[rgba(212,175,100,0.18)] transition-all duration-200"
                     >
                       <div className="flex items-start justify-between gap-4">
@@ -630,13 +630,13 @@ export default function CoachDashboard() {
                         {/* Actions */}
                         <div className="flex gap-1.5 flex-shrink-0">
                           <button
-                            onClick={() => router.push(`/coach/schedule/edit/${schedule._id}`)}
+                            onClick={() => router.push(`/coach/schedule/edit/${schedule.id}`)}
                             className="w-8 h-8 rounded-lg flex items-center justify-center text-[rgba(240,230,200,0.3)] border border-[rgba(240,230,200,0.07)] hover:text-[rgba(212,175,100,0.7)] hover:border-[rgba(212,175,100,0.2)] hover:bg-[rgba(212,175,100,0.05)] transition-all duration-200"
                           >
                             <Icon.Edit size={14} />
                           </button>
                           <button
-                            onClick={() => setDeleteModal({ id: schedule._id, title: schedule.title })}
+                            onClick={() => setDeleteModal({ id: schedule.id, title: schedule.title })}
                             className="w-8 h-8 rounded-lg flex items-center justify-center text-[rgba(240,230,200,0.3)] border border-[rgba(240,230,200,0.07)] hover:text-red-400 hover:border-[rgba(255,100,100,0.2)] hover:bg-[rgba(255,100,100,0.05)] transition-all duration-200"
                           >
                             <Icon.Trash size={14} />

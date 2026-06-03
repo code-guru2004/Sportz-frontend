@@ -78,7 +78,7 @@ export default function PendingUsersTab({ pendingUsers, onViewUser, onApprove, o
               Approve
             </button>
             <button
-              onClick={() => onReject(user.id)}
+              onClick={() => onReject(user.id)}  // Now triggers the dialog in parent
               disabled={isLoading}
               className="px-3 py-2 text-sm font-body border border-[rgba(255,100,100,0.3)] text-[#fc8181] rounded-lg hover:bg-[rgba(255,100,100,0.1)] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
             >

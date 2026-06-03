@@ -1,7 +1,7 @@
 // components/admin/UserDetailsDialog.jsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   User,
   Mail,
@@ -34,6 +34,10 @@ export default function UserDetailsDialog({ open, onOpenChange, user }) {
   const documents = user.documents || [];
   const notifications = user.notifications || [];
   const stats = user.stats || {};
+
+
+ 
+
 
   const getRoleColor = (role) => {
     switch (role) {
@@ -203,8 +207,8 @@ export default function UserDetailsDialog({ open, onOpenChange, user }) {
                     <Badge className={getRoleColor(account.role)}>
                       {account.role}
                     </Badge>
-                    <Badge variant={account.isApproved ? "success" : "default"}>
-                      {account.isApproved ? "Approved" : "Pending"}
+                    <Badge variant={account.approvalStatus === "APPROVED" ? "success" : "default"}>
+                      {account.approvalStatus==="APPROVED" ? "Approved" : "Pending"}
                     </Badge>
                     {account.isBlocked && (
                       <Badge variant="destructive">Blocked</Badge>
@@ -396,7 +400,7 @@ export default function UserDetailsDialog({ open, onOpenChange, user }) {
                     ) : (
                       <div className="space-y-3">
                         {schedules.map((schedule) => (
-                          <div key={schedule._id} className="bg-[rgba(255,255,255,0.02)] border border-[rgba(212,175,100,0.08)] rounded-lg p-4 hover:border-[rgba(212,175,100,0.2)] transition-all duration-300">
+                          <div key={schedule.id} className="bg-[rgba(255,255,255,0.02)] border border-[rgba(212,175,100,0.08)] rounded-lg p-4 hover:border-[rgba(212,175,100,0.2)] transition-all duration-300">
                             <div className="flex flex-wrap justify-between items-start gap-3">
                               <div className="flex-1 min-w-0">
                                 <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -444,7 +448,7 @@ export default function UserDetailsDialog({ open, onOpenChange, user }) {
                     ) : (
                       <div className="space-y-2">
                         {notifications.slice(0, 10).map((notification) => (
-                          <div key={notification._id} className="flex items-start gap-3 p-3 bg-[rgba(255,255,255,0.02)] rounded-lg border border-[rgba(212,175,100,0.05)]">
+                          <div key={notification.id} className="flex items-start gap-3 p-3 bg-[rgba(255,255,255,0.02)] rounded-lg border border-[rgba(212,175,100,0.05)]">
                             <Bell className="w-4 h-4 text-[#d4af64] mt-0.5 flex-shrink-0" />
                             <div className="flex-1 min-w-0">
                               <p className="font-body font-medium text-[#f0e6c8] text-sm">{notification.title}</p>

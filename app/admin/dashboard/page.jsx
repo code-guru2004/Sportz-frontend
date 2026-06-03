@@ -1,3 +1,4 @@
+// app/admin/dashboard/page.js (or wherever your admin dashboard is)
 "use client";
 
 import { useEffect, useState } from "react";
@@ -15,6 +16,16 @@ import SchedulesTab from "@/components/admin/SchedulesTab";
 import UserDetailsDialog from "@/components/admin/UserDetailsDialog";
 import { toast } from "sonner";
 import NotificationDialog from "@/components/admin/NotificationDialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
@@ -33,6 +44,10 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [notifyUserId, setNotifyUserId] = useState(null);
 
+  // Rejection dialog state
+  const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false);
+  const [rejectUserId, setRejectUserId] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState("");
 
   useEffect(() => {
     if (!loading && !user) {
@@ -65,6 +80,7 @@ export default function AdminDashboard() {
         withCredentials: true,
       });
       if (response.data.success) {
+        console.log("Fetched analytics:", response.data.analytics);
         setAnalytics(response.data.analytics);
       }
     } catch (error) {
@@ -88,7 +104,7 @@ export default function AdminDashboard() {
 
   const fetchAthletes = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/users?role=ATHLETE&isApproved=true`, {
+      const response = await axios.get(`${API_BASE_URL}/admin/users?role=ATHLETE&approvalStatus=APPROVED`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -102,7 +118,7 @@ export default function AdminDashboard() {
 
   const fetchCoaches = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/users?role=COACH&isApproved=true`, {
+      const response = await axios.get(`${API_BASE_URL}/admin/users?role=COACH&approvalStatus=APPROVED`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -147,15 +163,33 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleRejectUser = async (userId) => {
+  // Open rejection dialog
+  const openRejectionDialog = (userId) => {
+    setRejectUserId(userId);
+    setRejectionReason("");
+    setRejectionDialogOpen(true);
+  };
+
+  // Submit rejection with reason
+  const handleRejectUser = async () => {
+    if (!rejectUserId) return;
+    if (!rejectionReason.trim()) {
+      toast.error("Please provide a rejection reason");
+      return;
+    }
     setIsLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/admin/reject/${userId}`, {}, {
+      const response = await axios.post(`${API_BASE_URL}/admin/reject/${rejectUserId}`, {
+        rejectionReason: rejectionReason.trim()
+      }, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
       if (response.data.success) {
-        toast.success("User rejected and removed!");
+        toast.success("User rejected!");
+        setRejectionDialogOpen(false);
+        setRejectUserId(null);
+        setRejectionReason("");
         await fetchPendingUsers();
         await fetchAnalytics();
       }
@@ -208,6 +242,7 @@ export default function AdminDashboard() {
         withCredentials: true,
       });
       if (response.data.success) {
+        console.log("Fetched user details:", response.data);
         setSelectedUser(response.data.userDetails || response.data.user);
         setIsUserDialogOpen(true);
       }
@@ -288,13 +323,14 @@ export default function AdminDashboard() {
               pendingUsers={pendingUsers}
               onViewUser={handleViewUser}
               onApprove={handleApproveUser}
-              onReject={handleRejectUser}
+              onReject={openRejectionDialog}  // Pass the dialog opener
               isLoading={isLoading}
             />
           </TabsContent>
 
           <TabsContent value="athletes" className="anim-fade-up">
             <AthletesTab
+              accessToken={accessToken}
               athletes={athletes}
               onViewUser={handleViewUser}
               onBlockUser={handleBlockUser}
@@ -335,6 +371,43 @@ export default function AdminDashboard() {
           if (!open) setNotifyUserId(null);
         }}
       />
+
+      {/* Rejection Reason Dialog */}
+      <Dialog open={rejectionDialogOpen} onOpenChange={setRejectionDialogOpen}>
+        <DialogContent className="bg-[#0f0f12] border border-[rgba(212,175,100,0.2)] text-[#f0e6c8]">
+          <DialogHeader>
+            <DialogTitle className="text-[#d4af64] font-display">Reject User Application</DialogTitle>
+            <DialogDescription className="text-[rgba(240,230,200,0.6)]">
+              Please provide a reason for rejecting this user. The reason will be emailed to the user.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Textarea
+              placeholder="Enter rejection reason..."
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              className="bg-[#0c0c0e] border-[rgba(212,175,100,0.2)] focus:border-[#d4af64] text-[#f0e6c8]"
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setRejectionDialogOpen(false)}
+              className="border-[rgba(212,175,100,0.3)] text-[rgba(240,230,200,0.7)] hover:bg-[rgba(212,175,100,0.1)]"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleRejectUser}
+              disabled={isLoading || !rejectionReason.trim()}
+              className="bg-gradient-to-r from-[#d4af64] to-[#c49a40] text-[#0c0c0e] hover:shadow-lg"
+            >
+              {isLoading ? "Rejecting..." : "Confirm Rejection"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

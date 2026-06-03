@@ -18,6 +18,75 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
+// Move InputField outside the component to prevent recreation
+const InputField = ({ 
+  label, name, type = "text", icon: Icon, placeholder, required, options, 
+  value, error, onChange, onFocus, onBlur, focused 
+}) => {
+  const isSelect = type === "select";
+  
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-[0.75rem] font-medium tracking-[0.06em] uppercase text-[rgba(240,230,200,0.5)]">
+        {label} {required && <span className="text-[#d4af64]">*</span>}
+      </label>
+      <div className="relative">
+        {Icon && (
+          <span className={`absolute top-1/2 left-4 -translate-y-1/2 pointer-events-none transition-colors duration-200 flex items-center ${focused === name ? "text-[#d4af64]" : "text-[rgba(240,230,200,0.25)]"}`}>
+            <Icon className="w-4 h-4" />
+          </span>
+        )}
+        {isSelect ? (
+          <select
+            name={name}
+            value={value}
+            onChange={onChange}
+            onFocus={() => onFocus(name)}
+            onBlur={() => onBlur("")}
+            className={`w-full py-3.5 px-4 ${Icon ? 'pl-11' : 'pl-4'} pr-3 bg-[rgba(255,255,255,0.03)] border rounded-lg outline-none text-[#f0e6c8] text-[0.9375rem] font-['DM_Sans',sans-serif] font-light transition-all duration-200 box-border focus:border-[rgba(212,175,100,0.45)] focus:bg-[rgba(212,175,100,0.04)] focus:shadow-[0_0_0_3px_rgba(212,175,100,0.07)] ${error ? "border-[rgba(255,100,100,0.4)]" : "border-[rgba(240,230,200,0.1)]"} appearance-none`}
+          >
+            {options.map(opt => (
+              <option key={opt.value} value={opt.value} className="bg-[#0f0f12] text-[#f0e6c8]">
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        ) : type === "textarea" ? (
+          <textarea
+            name={name}
+            value={value}
+            onChange={onChange}
+            onFocus={() => onFocus(name)}
+            onBlur={() => onBlur("")}
+            rows={4}
+            maxLength={500}
+            placeholder={placeholder}
+            className={`w-full py-3.5 px-4 ${Icon ? 'pl-11' : 'pl-4'} bg-[rgba(255,255,255,0.03)] border rounded-lg outline-none text-[#f0e6c8] text-[0.9375rem] font-['DM_Sans',sans-serif] font-light transition-all duration-200 box-border placeholder:text-[rgba(240,230,200,0.2)] focus:border-[rgba(212,175,100,0.45)] focus:bg-[rgba(212,175,100,0.04)] focus:shadow-[0_0_0_3px_rgba(212,175,100,0.07)] resize-none ${error ? "border-[rgba(255,100,100,0.4)]" : "border-[rgba(240,230,200,0.1)]"}`}
+          />
+        ) : (
+          <input
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            onFocus={() => onFocus(name)}
+            onBlur={() => onBlur("")}
+            placeholder={placeholder}
+            className={`w-full py-3.5 px-4 ${Icon ? 'pl-11' : 'pl-4'} bg-[rgba(255,255,255,0.03)] border rounded-lg outline-none text-[#f0e6c8] text-[0.9375rem] font-['DM_Sans',sans-serif] font-light transition-all duration-200 box-border placeholder:text-[rgba(240,230,200,0.2)] focus:border-[rgba(212,175,100,0.45)] focus:bg-[rgba(212,175,100,0.04)] focus:shadow-[0_0_0_3px_rgba(212,175,100,0.07)] ${error ? "border-[rgba(255,100,100,0.4)]" : "border-[rgba(240,230,200,0.1)]"}`}
+          />
+        )}
+      </div>
+      {error && <span className="text-[0.75rem] text-[#fc8181] mt-0.5">{error}</span>}
+      {name === "duration" && !error && (
+        <p className="text-[0.7rem] text-[rgba(240,230,200,0.35)] mt-0.5">Minimum 15 minutes</p>
+      )}
+      {name === "maxParticipants" && !error && (
+        <p className="text-[0.7rem] text-[rgba(240,230,200,0.35)] mt-0.5">Maximum number of athletes</p>
+      )}
+    </div>
+  );
+};
+
 export default function EditSchedulePage() {
   const params = useParams();
   const router = useRouter();
@@ -48,18 +117,20 @@ export default function EditSchedulePage() {
 
   const fetchSchedule = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/schedules`, {
+      const response = await axios.get(`${API_BASE_URL}/schedules/${scheduleId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
+      console.log("Fetched schedules:", response.data);
       
       if (response.data.success) {
-        const schedule = response.data.schedules.find(s => s._id === scheduleId);
+        
+        const schedule = response.data.schedule
         if (schedule) {
           setFormData({
             title: schedule.title,
             sport: schedule.sport,
-            date: schedule.date.split('T')[0],
+            date: schedule.date ? schedule.date.split('T')[0] : "",
             time: schedule.time,
             location: schedule.location,
             description: schedule.description || "",
@@ -67,6 +138,8 @@ export default function EditSchedulePage() {
             maxParticipants: schedule.maxParticipants,
             status: schedule.status
           });
+        } else {
+          console.error("Schedule not found");
         }
       }
     } catch (error) {
@@ -126,72 +199,6 @@ export default function EditSchedulePage() {
     }
   };
 
-  // Input field component for consistency
-  const InputField = ({ label, name, type = "text", icon: Icon, placeholder, required, options }) => {
-    const isSelect = type === "select";
-    
-    return (
-      <div className="flex flex-col gap-1.5">
-        <label className="text-[0.75rem] font-medium tracking-[0.06em] uppercase text-[rgba(240,230,200,0.5)]">
-          {label} {required && <span className="text-[#d4af64]">*</span>}
-        </label>
-        <div className="relative">
-          {Icon && (
-            <span className={`absolute top-1/2 left-4 -translate-y-1/2 pointer-events-none transition-colors duration-200 flex items-center ${focused === name ? "text-[#d4af64]" : "text-[rgba(240,230,200,0.25)]"}`}>
-              <Icon className="w-4 h-4" />
-            </span>
-          )}
-          {isSelect ? (
-            <select
-              name={name}
-              value={formData[name]}
-              onChange={handleChange}
-              onFocus={() => setFocused(name)}
-              onBlur={() => setFocused("")}
-              className={`w-full py-3.5 px-4 ${Icon ? 'pl-11' : 'pl-4'} pr-3 bg-[rgba(255,255,255,0.03)] border rounded-lg outline-none text-[#f0e6c8] text-[0.9375rem] font-['DM_Sans',sans-serif] font-light transition-all duration-200 box-border focus:border-[rgba(212,175,100,0.45)] focus:bg-[rgba(212,175,100,0.04)] focus:shadow-[0_0_0_3px_rgba(212,175,100,0.07)] ${errors[name] ? "border-[rgba(255,100,100,0.4)]" : "border-[rgba(240,230,200,0.1)]"} appearance-none`}
-            >
-              {options.map(opt => (
-                <option key={opt.value} value={opt.value} className="bg-[#0f0f12] text-[#f0e6c8]">
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          ) : type === "textarea" ? (
-            <textarea
-              name={name}
-              value={formData[name]}
-              onChange={handleChange}
-              onFocus={() => setFocused(name)}
-              onBlur={() => setFocused("")}
-              rows={4}
-              maxLength={500}
-              placeholder={placeholder}
-              className={`w-full py-3.5 px-4 ${Icon ? 'pl-11' : 'pl-4'} bg-[rgba(255,255,255,0.03)] border rounded-lg outline-none text-[#f0e6c8] text-[0.9375rem] font-['DM_Sans',sans-serif] font-light transition-all duration-200 box-border placeholder:text-[rgba(240,230,200,0.2)] focus:border-[rgba(212,175,100,0.45)] focus:bg-[rgba(212,175,100,0.04)] focus:shadow-[0_0_0_3px_rgba(212,175,100,0.07)] resize-none ${errors[name] ? "border-[rgba(255,100,100,0.4)]" : "border-[rgba(240,230,200,0.1)]"}`}
-            />
-          ) : (
-            <input
-              type={type}
-              name={name}
-              value={formData[name]}
-              onChange={handleChange}
-              onFocus={() => setFocused(name)}
-              onBlur={() => setFocused("")}
-              placeholder={placeholder}
-              className={`w-full py-3.5 px-4 ${Icon ? 'pl-11' : 'pl-4'} bg-[rgba(255,255,255,0.03)] border rounded-lg outline-none text-[#f0e6c8] text-[0.9375rem] font-['DM_Sans',sans-serif] font-light transition-all duration-200 box-border placeholder:text-[rgba(240,230,200,0.2)] focus:border-[rgba(212,175,100,0.45)] focus:bg-[rgba(212,175,100,0.04)] focus:shadow-[0_0_0_3px_rgba(212,175,100,0.07)] ${errors[name] ? "border-[rgba(255,100,100,0.4)]" : "border-[rgba(240,230,200,0.1)]"}`}
-            />
-          )}
-        </div>
-        {errors[name] && <span className="text-[0.75rem] text-[#fc8181] mt-0.5">{errors[name]}</span>}
-        {name === "duration" && !errors[name] && (
-          <p className="text-[0.7rem] text-[rgba(240,230,200,0.35)] mt-0.5">Minimum 15 minutes</p>
-        )}
-        {name === "maxParticipants" && !errors[name] && (
-          <p className="text-[0.7rem] text-[rgba(240,230,200,0.35)] mt-0.5">Maximum number of athletes</p>
-        )}
-      </div>
-    );
-  };
-
   const getStatusOptions = () => {
     const options = [
       { value: "SCHEDULED", label: "Scheduled" },
@@ -199,7 +206,6 @@ export default function EditSchedulePage() {
       { value: "CANCELLED", label: "Cancelled" }
     ];
     
-    // Get status color for display
     const getStatusColor = (status) => {
       switch(status) {
         case "SCHEDULED": return "text-[#4ade80]";
@@ -273,6 +279,12 @@ export default function EditSchedulePage() {
               icon={DocumentTextIcon}
               placeholder="e.g., Morning Cricket Practice"
               required
+              value={formData.title}
+              error={errors.title}
+              onChange={handleChange}
+              onFocus={setFocused}
+              onBlur={setFocused}
+              focused={focused}
             />
 
             {/* Sport */}
@@ -286,6 +298,12 @@ export default function EditSchedulePage() {
                 { value: "CRICKET", label: "Cricket" },
                 { value: "FOOTBALL", label: "Football" }
               ]}
+              value={formData.sport}
+              error={errors.sport}
+              onChange={handleChange}
+              onFocus={setFocused}
+              onBlur={setFocused}
+              focused={focused}
             />
 
             {/* Status */}
@@ -325,6 +343,12 @@ export default function EditSchedulePage() {
                 type="date"
                 icon={CalendarIcon}
                 required
+                value={formData.date}
+                error={errors.date}
+                onChange={handleChange}
+                onFocus={setFocused}
+                onBlur={setFocused}
+                focused={focused}
               />
 
               {/* Time */}
@@ -334,6 +358,12 @@ export default function EditSchedulePage() {
                 type="time"
                 icon={ClockIcon}
                 required
+                value={formData.time}
+                error={errors.time}
+                onChange={handleChange}
+                onFocus={setFocused}
+                onBlur={setFocused}
+                focused={focused}
               />
             </div>
 
@@ -344,6 +374,12 @@ export default function EditSchedulePage() {
               icon={MapPinIcon}
               placeholder="e.g., City Sports Complex, Ground A"
               required
+              value={formData.location}
+              error={errors.location}
+              onChange={handleChange}
+              onFocus={setFocused}
+              onBlur={setFocused}
+              focused={focused}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -354,6 +390,12 @@ export default function EditSchedulePage() {
                 type="number"
                 icon={ClockIcon}
                 placeholder="60"
+                value={formData.duration}
+                error={errors.duration}
+                onChange={handleChange}
+                onFocus={setFocused}
+                onBlur={setFocused}
+                focused={focused}
               />
 
               {/* Max Participants */}
@@ -363,6 +405,12 @@ export default function EditSchedulePage() {
                 type="number"
                 icon={UsersIcon}
                 placeholder="50"
+                value={formData.maxParticipants}
+                error={errors.maxParticipants}
+                onChange={handleChange}
+                onFocus={setFocused}
+                onBlur={setFocused}
+                focused={focused}
               />
             </div>
 

@@ -200,7 +200,7 @@ export default function EditProfilePage() {
         profilePictureUrl: profilePicture || profile?.profilePictureUrl
       };
       
-      const response = await axios.put(`${API_BASE_URL}/profile/me`, updateData, {
+      const response = await axios.put(`${API_BASE_URL}/profile/update`, updateData, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });

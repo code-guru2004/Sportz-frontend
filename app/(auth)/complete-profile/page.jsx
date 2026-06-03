@@ -282,7 +282,7 @@ export default function CompleteProfilePage() {
                       ? "bg-[rgba(212,175,100,0.15)] border-[rgba(212,175,100,0.4)] text-[#d4af64]"
                       : "bg-white/[0.03] border-[rgba(240,230,200,0.1)] text-[rgba(240,230,200,0.3)]",
                   ].join(" ")}>
-                    {done ? <Icon.Check /> : n}
+                    {done ? <Check /> : n}
                   </div>
                   {i < 3 && <div className="w-px h-8 bg-gradient-to-b from-[rgba(212,175,100,0.15)] to-transparent mt-1 mb-1" />}
                 </div>

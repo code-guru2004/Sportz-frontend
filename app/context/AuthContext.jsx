@@ -263,7 +263,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (response.data.success) {
-        //console.log("Login successful:", response.data);
+        console.log("Login successful:", response.data);
         
         // Store access token in cookie
         Cookies.set('accessToken', response.data.accessToken, { 
@@ -281,7 +281,7 @@ export const AuthProvider = ({ children }) => {
         // Check profile completion status
         if (!response.data.user.profileCompleted) {
           router.push("/complete-profile");
-        } else if (!response.data.user.isApproved) {
+        } else if (!response.data.user.approvalStatus || response.data.user.approvalStatus === "PENDING") {
           router.push("/waiting-approval");
         } else {
           // Redirect based on role

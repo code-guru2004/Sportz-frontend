@@ -11,52 +11,6 @@ import { FcSportsMode } from "react-icons/fc";
 const API_BASE_URL = "http://localhost:5000/api";
 
 
-// ── Animated orbit ring ───────────────────────────────────────────────────────
-function OrbitClock() {
-  return (
-    <div className="relative w-28 h-28 mx-auto mb-8">
-      {/* Outer glow */}
-      <div className="absolute inset-0 rounded-full bg-[rgba(212,175,100,0.08)] blur-xl" />
-      {/* Rotating dashed ring */}
-      <svg className="absolute inset-0 w-full h-full animate-[spin_12s_linear_infinite]" viewBox="0 0 112 112">
-        <circle
-          cx="56" cy="56" r="50"
-          fill="none"
-          stroke="rgba(212,175,100,0.2)"
-          strokeWidth="1"
-          strokeDasharray="8 6"
-          strokeLinecap="round"
-        />
-      </svg>
-      {/* Inner ring */}
-      <svg className="absolute inset-0 w-full h-full animate-[spin_6s_linear_infinite_reverse]" viewBox="0 0 112 112">
-        <circle
-          cx="56" cy="56" r="38"
-          fill="none"
-          stroke="rgba(212,175,100,0.12)"
-          strokeWidth="1"
-          strokeDasharray="4 8"
-          strokeLinecap="round"
-        />
-      </svg>
-      {/* Center icon box */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-16 h-16 rounded-2xl bg-[rgba(212,175,100,0.08)] border border-[rgba(212,175,100,0.2)] flex items-center justify-center backdrop-blur-sm">
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <circle cx="14" cy="14" r="10" stroke="#d4af64" strokeWidth="1.5"/>
-            <path d="M14 8v6l4 2" stroke="#d4af64" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-      </div>
-      {/* Orbiting dot */}
-      <div
-        className="absolute w-2.5 h-2.5 rounded-full bg-[#d4af64] shadow-[0_0_8px_rgba(212,175,100,0.8)] animate-[spin_4s_linear_infinite]"
-        style={{ top: "50%", left: "50%", transformOrigin: "0 -44px", marginLeft: "-5px", marginTop: "-5px" }}
-      />
-    </div>
-  );
-}
-
 // ── Status card ───────────────────────────────────────────────────────────────
 function StatusCard({ icon, title, body, accent }) {
   const accentStyles = {
@@ -96,7 +50,7 @@ export default function WaitingApprovalPage() {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
-      if (res.data.success && res.data.user.isApproved) {
+      if (res.data.success && res.data.user.approvalStatus==="APPROVED") {
         router.push("/dashboard");
       } else {
         setStatusMsg({ type: "info", text: "Your account is still under review. We'll notify you by email." });

@@ -25,8 +25,9 @@ export default function LoginPage() {
       setTimeout(() => setShowSuccess(false), 5000);
     }
     if (!loading && user) {
+      console.log("User status:", user);
       if (!user.profileCompleted) router.push("/complete-profile");
-      else if (!user.isApproved) router.push("/waiting-approval");
+      else if (user?.approvalStatus==="PENDING") router.push("/waiting-approval");
     }
   }, [user, loading, router]);
 
