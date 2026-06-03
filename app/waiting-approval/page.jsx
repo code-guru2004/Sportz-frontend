@@ -46,7 +46,7 @@ export default function WaitingApprovalPage() {
     setChecking(true);
     setStatusMsg(null);
     try {
-      const res = await axios.get(`${API_BASE_URL}/auth/me`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });

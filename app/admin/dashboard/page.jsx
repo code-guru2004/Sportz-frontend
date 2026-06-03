@@ -75,7 +75,7 @@ export default function AdminDashboard() {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/analytics`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/analytics`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
 
   const fetchPendingUsers = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/pending-users`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/pending-users`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
 
   const fetchAthletes = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/users?role=ATHLETE&approvalStatus=APPROVED`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users?role=ATHLETE&approvalStatus=APPROVED`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
 
   const fetchCoaches = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/users?role=COACH&approvalStatus=APPROVED`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users?role=COACH&approvalStatus=APPROVED`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -132,7 +132,7 @@ export default function AdminDashboard() {
 
   const fetchSchedules = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/schedules?showPast=true`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/schedules?showPast=true`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
   const handleApproveUser = async (userId) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/admin/approve/${userId}`, {}, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/approve/${userId}`, {}, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -179,7 +179,7 @@ export default function AdminDashboard() {
     }
     setIsLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/admin/reject/${rejectUserId}`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/reject/${rejectUserId}`, {
         rejectionReason: rejectionReason.trim()
       }, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -202,7 +202,7 @@ export default function AdminDashboard() {
 
   const handleBlockUser = async (userId) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/admin/toggle-block/${userId}`, {}, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/toggle-block/${userId}`, {}, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
     if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
 
     try {
-      const response = await axios.delete(`${API_BASE_URL}/admin/user/${userId}`, {
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/user/${userId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -237,7 +237,7 @@ export default function AdminDashboard() {
 
   const handleViewUser = async (userId) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/users/${userId}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users/${userId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });

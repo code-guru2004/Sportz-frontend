@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     
           try {
             const refreshResponse = await axios.post(
-              `${API_BASE_URL}/auth/refresh-token`,
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/refresh-token`,
               {},
               { withCredentials: true }
             );
@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }) => {
           console.log("Trying refresh because access token missing");
       
           const response = await axios.post(
-            `${API_BASE_URL}/auth/refresh-token`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/refresh-token`,
             {},
             { withCredentials: true }
           );
@@ -149,7 +149,7 @@ export const AuthProvider = ({ children }) => {
       if (accessTokenFromCookie) {
 
         try {
-          const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
+          const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/me`, {
             headers: {
               Authorization: `Bearer ${accessTokenFromCookie}`,
             },
@@ -170,7 +170,7 @@ export const AuthProvider = ({ children }) => {
   
       
       const response = await axios.post(
-        `${API_BASE_URL}/auth/refresh-token`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/refresh-token`,
         {},
         { withCredentials: true }
       );
@@ -188,7 +188,7 @@ export const AuthProvider = ({ children }) => {
           sameSite: "lax",
         });
   
-        const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
+        const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/me`, {
           headers: {
             Authorization: `Bearer ${newAccessToken}`,
           },
@@ -216,7 +216,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
      // console.log("Registering user with data:", userData);
-      const response = await axios.post(`${API_BASE_URL}/auth/register`, userData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`, userData, {
         withCredentials: true,
       });
 
@@ -237,7 +237,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyEmail = async (email, otp) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/verify-email`, { email, otp }, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-email`, { email, otp }, {
         withCredentials: true,
       });
 
@@ -258,7 +258,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, { email, password }, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, { email, password }, {
         withCredentials: true,
       });
 
@@ -324,7 +324,7 @@ const completeProfile = async (profileData) => {
   try {
     //console.log("Completing profile with data:", profileData);
     const token = accessToken || Cookies.get('accessToken');
-    const response = await axios.post(`${API_BASE_URL}/profile/complete`, profileData, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/profile/complete`, profileData, {
       headers: { 
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
@@ -352,7 +352,7 @@ const completeProfile = async (profileData) => {
 const getProfile = async () => {
   try {
     const token = accessToken || Cookies.get('accessToken');
-    const response = await axios.get(`${API_BASE_URL}/profile/me`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/profile/me`, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     });
@@ -375,7 +375,7 @@ const getProfile = async () => {
   const logout = async () => {
     try {
       const token = accessToken || Cookies.get('accessToken');
-      await axios.post(`${API_BASE_URL}/auth/logout`, {}, {
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`, {}, {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` }
       });

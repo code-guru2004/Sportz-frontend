@@ -55,7 +55,7 @@ export default function AthletesTab({ accessToken, onViewUser, onBlockUser, onDe
         params.append("isVerified", verifiedBool);
       }
 
-      const response = await axios.get(`${API_BASE_URL}/admin/users?${params.toString()}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users?${params.toString()}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });

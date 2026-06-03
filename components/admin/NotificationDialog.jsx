@@ -37,7 +37,7 @@ function NotificationDialog({
       setLoading(true);
 
       const response = await axios.post(
-        `${API_BASE_URL}/notifications`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/notifications`,
         {
           userId,
           title,

@@ -103,7 +103,7 @@ export default function CreateSchedulePage() {
     setIsLoading(true);
     
     try {
-      const response = await axios.post(`${API_BASE_URL}/schedules`, formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/schedules`, formData, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });

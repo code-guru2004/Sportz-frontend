@@ -117,7 +117,7 @@ export default function EditSchedulePage() {
 
   const fetchSchedule = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/schedules/${scheduleId}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/schedules/${scheduleId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -180,7 +180,7 @@ export default function EditSchedulePage() {
     setIsLoading(true);
     
     try {
-      const response = await axios.put(`${API_BASE_URL}/schedules/${scheduleId}`, formData, {
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/schedules/${scheduleId}`, formData, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });

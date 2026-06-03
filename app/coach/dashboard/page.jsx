@@ -255,7 +255,7 @@ export default function CoachDashboard() {
 
   const fetchCoachDashboardStats = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/users/coach/dashboard-stats`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true });
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/coach/dashboard-stats`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true });
       if (res.data.success) setDashboardStats(res.data.stats);
     } catch { }
   };
@@ -263,7 +263,7 @@ export default function CoachDashboard() {
   const fetchSchedules = async () => {
     setIsLoadingSchedules(true);
     try {
-      const res = await axios.get(`${API_BASE_URL}/schedules`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true });
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/schedules`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true });
       if (res.data.success) setSchedules(res.data.schedules);
     } catch { toast.error("Failed to fetch schedules"); }
     finally { setIsLoadingSchedules(false); }
@@ -272,7 +272,7 @@ export default function CoachDashboard() {
   const fetchPlayers = async () => {
     setIsLoadingPlayers(true);
     try {
-      const res = await axios.get(`${API_BASE_URL}/users/athletes`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true, params: { sport: profileData?.sport } });
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/athletes`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true, params: { sport: profileData?.sport } });
       if (res.data.success) setPlayers(res.data.athletes);
     } catch { toast.error("Failed to fetch players"); }
     finally { setIsLoadingPlayers(false); }
@@ -280,7 +280,7 @@ export default function CoachDashboard() {
 
   const handleDeleteSchedule = async (scheduleId) => {
     try {
-      const res = await axios.delete(`${API_BASE_URL}/schedules/${scheduleId}`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true });
+      const res = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/schedules/${scheduleId}`, { headers: { Authorization: `Bearer ${accessToken}` }, withCredentials: true });
       if (res.data.success) {
         setSchedules(s => s.filter(x => x.id !== scheduleId));
         setDeleteModal(null);

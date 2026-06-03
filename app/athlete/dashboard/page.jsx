@@ -72,7 +72,7 @@ export default function AthleteDashboard() {
 
   const fetchScheduleEvents = async (sport) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/schedules`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/schedules`, {
         params: { sport },
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,

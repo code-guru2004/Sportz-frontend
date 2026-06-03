@@ -28,7 +28,7 @@ export default function SchedulesTab({ schedules, accessToken, onRefresh }) {
     setSendingId(schedule.id);
     
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/users?role=ATHLETE&approvelStatus=PENDING&sport=${schedule.sport}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users?role=ATHLETE&approvelStatus=PENDING&sport=${schedule.sport}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,
       });
@@ -44,7 +44,7 @@ export default function SchedulesTab({ schedules, accessToken, onRefresh }) {
       }));
       
       for (const notification of notifications) {
-        await axios.post(`${API_BASE_URL}/notifications/send`, notification, {
+        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/notifications/send`, notification, {
           headers: { Authorization: `Bearer ${accessToken}` },
           withCredentials: true,
         });
