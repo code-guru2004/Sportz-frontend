@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FcSportsMode } from "react-icons/fc";
 
@@ -37,7 +37,7 @@ const IconCheck = () => (
 
 export default function VerifyEmailPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+
   const [email, setEmail] = useState("");
 
   useEffect(() => {
