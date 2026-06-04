@@ -45,6 +45,8 @@ export default function VerifyEmailPage() {
   
     if (storedEmail) {
       setEmail(storedEmail);
+    }else{
+      router.replace("/login")
     }
   }, []);
   const [otp, setOtp] = useState("");

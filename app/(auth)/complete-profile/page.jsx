@@ -148,7 +148,9 @@ export default function CompleteProfilePage() {
     const birth = new Date(dob);
     let age = today.getFullYear() - birth.getFullYear();
     if (today.getMonth() - birth.getMonth() < 0 ||
-      (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) age--;
+      (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())){
+         age--;
+      }
     return age;
   };
 
@@ -160,21 +162,34 @@ export default function CompleteProfilePage() {
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (data.success) {
-        if (type === "profile") setProfilePictureUrl(data.url);
-        else return { url: data.url, public_id: data.public_id };
+        if (type === "profile"){
+           setProfilePictureUrl(data.url);
+        }
+        else{
+           return { 
+            url: data.url,
+             public_id: data.public_id
+             };
+        }
         return data.url;
       } else throw new Error(data.error || "Upload failed");
     } catch {
       setErrors(p => ({ ...p, upload: "Failed to upload. Please try again." }));
       return null;
-    } finally { setIsUploading(false); }
+    } finally { 
+      setIsUploading(false);
+     }
   };
 
   const handleProfilePictureChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) { setErrors(p => ({ ...p, profilePicture: "Please upload an image file" })); return; }
-    if (file.size > 5 * 1024 * 1024) { setErrors(p => ({ ...p, profilePicture: "Max 5MB" })); return; }
+    if (!file.type.startsWith("image/")) { 
+      setErrors(p => ({ ...p, profilePicture: "Please upload an image file" })); return; 
+    }
+    if (file.size > 5 * 1024 * 1024) { 
+      setErrors(p => ({ ...p, profilePicture: "Max 5MB" })); return;
+     }
     setProfilePicturePreview(URL.createObjectURL(file));
     await handleUpload(file, "profile");
   };
@@ -182,9 +197,15 @@ export default function CompleteProfilePage() {
   const handleDocumentUpload = async (e, documentType) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const allowed = ["image/jpeg", "image/png", "image/jpg", "application/pdf"];
-    if (!allowed.includes(file.type)) { setErrors(p => ({ ...p, documents: "JPEG, PNG, or PDF only" })); return; }
-    if (file.size > 10 * 1024 * 1024) { setErrors(p => ({ ...p, documents: "Max 10MB per file" })); return; }
+
+    if (!allowed.includes(file.type)) { 
+      setErrors(p => ({ ...p, documents: "JPEG, PNG, or PDF only" })); return;
+     }
+    if (file.size > 10 * 1024 * 1024) { 
+      setErrors(p => ({ ...p, documents: "Max 10MB per file" })); return; 
+    }
     const result = await handleUpload(file, "document");
     if (result) setDocuments(prev => [...prev, { documentType, documentUrl: result, documentName: file.name }]);
   };
@@ -194,22 +215,62 @@ export default function CompleteProfilePage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
+    if (errors[name]){
+     setErrors(prev => ({ ...prev, [name]: "" }));
+    }
   };
 
   const validateForm = () => {
-    const e = {};
-    if (!formData.fullName?.trim()) e.fullName = "Full name is required";
-    if (!formData.dateOfBirth) e.dateOfBirth = "Date of birth is required";
-    else { const a = calculateAge(formData.dateOfBirth); if (a < 10) e.dateOfBirth = "Must be at least 10"; else if (a > 60) e.dateOfBirth = "Must be under 60"; }
-    if (!formData.sport) e.sport = "Sport is required";
-    else if (!["CRICKET", "FOOTBALL"].includes(formData.sport)) e.sport = "Select Cricket or Football";
-    if (!formData.address?.trim()) e.address = "Address is required";
-    if (!formData.level) e.level = "Level is required";
-    else if (!["DISTRICT", "STATE", "NATIONAL"].includes(formData.level)) e.level = "Select a valid level";
-    if (formData.bio?.length > 300) e.bio = "Max 300 characters";
-    setErrors(e);
-    return Object.keys(e).length === 0;
+    const errors = {};
+  
+    // Full Name
+    if (!formData.fullName?.trim()) {
+      errors.fullName = "Full name is required";
+    }
+  
+    // Date of Birth
+    if (!formData.dateOfBirth) {
+      errors.dateOfBirth = "Date of birth is required";
+    } else {
+      const age = calculateAge(formData.dateOfBirth);
+  
+      if (age < 10) {
+        errors.dateOfBirth = "Must be at least 10 years old";
+      } else if (age > 60) {
+        errors.dateOfBirth = "Must be under 60 years old";
+      }
+    }
+  
+    // Sport
+    const validSports = ["CRICKET", "FOOTBALL"];
+  
+    if (!formData.sport) {
+      errors.sport = "Sport is required";
+    } else if (!validSports.includes(formData.sport)) {
+      errors.sport = "Select Cricket or Football";
+    }
+  
+    // Address
+    if (!formData.address?.trim()) {
+      errors.address = "Address is required";
+    }
+  
+    // Level
+    const validLevels = ["DISTRICT", "STATE", "NATIONAL"];
+  
+    if (!formData.level) {
+      errors.level = "Level is required";
+    } else if (!validLevels.includes(formData.level)) {
+      errors.level = "Select a valid level";
+    }
+  
+    // Bio
+    if (formData.bio?.length > 300) {
+      errors.bio = "Maximum 300 characters allowed";
+    }
+  
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {

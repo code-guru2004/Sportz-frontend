@@ -194,7 +194,7 @@ export default function RegisterPage() {
 
   const [formData, setFormData] = useState({
     username: "", email: "", phone: "",
-    role: "ATHLETE", password: "Nayan@2004", confirmPassword: "Nayan@2004",
+    role: "ATHLETE", password: "", confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
