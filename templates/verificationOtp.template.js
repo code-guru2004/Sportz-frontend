@@ -8,25 +8,21 @@ const verificationOtpTemplate = ({
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Email Verification - Veritas Sports</title>
+            <title>Email Verification - Sportz</title>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap');
             </style>
         </head>
         <body style="margin: 0; padding: 0; background-color: #0c0c0e; font-family: 'DM Sans', Arial, sans-serif;">
-            <div style="max-width: 600px; margin: auto; padding: 40px 20px; background-color: #0c0c0e;">
+            <div style="max-width: 600px; margin: auto; background-color: #0c0c0e;">
                 <!-- Main Card -->
                 <div style="background: #0f0f12; border-radius: 24px; border: 1px solid rgba(212, 175, 100, 0.15); overflow: hidden;">
                     
                     <!-- Header with Logo -->
                     <div style="padding: 40px 40px 20px 40px; text-align: center; border-bottom: 1px solid rgba(212, 175, 100, 0.1);">
                         <div style="display: inline-flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #d4af64, #c49a40); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9 2L11.5 7H16.5L12.5 10.5L14 15.5L9 12.5L4 15.5L5.5 10.5L1.5 7H6.5L9 2Z" fill="#0c0c0e"/>
-                                </svg>
-                            </div>
-                            <span style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: #f0e6c8; letter-spacing: 0.04em;">Veritas Sports</span>
+                            
+                            <span style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: #f0e6c8; letter-spacing: 0.04em;">Sportz</span>
                         </div>
                         <div style="width: 60px; height: 2px; background: linear-gradient(90deg, #d4af64, transparent); margin: 0 auto;"></div>
                     </div>
@@ -46,12 +42,12 @@ const verificationOtpTemplate = ({
                         </p>
                         
                         <p style="font-size: 15px; color: rgba(240, 230, 200, 0.6); margin-bottom: 25px; line-height: 1.6;">
-                            Thank you for joining <strong style="color: #d4af64;">Veritas Sports</strong>! Please use the verification code below to complete your email verification and activate your account.
+                            Thank you for joining <strong style="color: #d4af64;">Sportz</strong>! Please use the verification code below to complete your email verification and activate your account.
                         </p>
                         
                         <!-- OTP Box -->
                         <div style="margin: 35px 0; text-align: center;">
-                            <div style="display: inline-block; background: rgba(212, 175, 100, 0.05); border: 1px solid rgba(212, 175, 100, 0.2); border-radius: 16px; padding: 20px 40px;">
+                            <div style="display: inline-block; background: rgba(212, 175, 100, 0.05); border: 1px solid rgba(212, 175, 100, 0.2); border-radius: 16px; padding: 5px 7px;">
                                 <span style="font-family: monospace; font-size: 42px; letter-spacing: 12px; font-weight: 600; color: #d4af64; background: transparent;">
                                     ${otp}
                                 </span>
@@ -89,7 +85,7 @@ const verificationOtpTemplate = ({
                             Need help? Contact our support team
                         </p>
                         <p style="font-size: 11px; color: rgba(240, 230, 200, 0.25); margin: 0;">
-                            &copy; 2026 Veritas Sports. All rights reserved.
+                            &copy; 2026 Sportz. All rights reserved.
                         </p>
                     </div>
                 </div>
