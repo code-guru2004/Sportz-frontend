@@ -11,11 +11,7 @@ export async function POST(req) {
       from: `"Your App Name" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Verify Your Email",
-      html: `
-        <h2>Hello ${name}</h2>
-        <p>Your OTP is:</p>
-        <h1>${otp}</h1>
-      `,
+      html: verificationOtpTemplate({name,otp}),
     });
 
     return NextResponse.json({ success: true, message: 'Email sent!' });
