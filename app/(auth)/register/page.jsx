@@ -104,7 +104,7 @@ function OtpModal({ email, otp, setOtp, otpError, setOtpError, isVerifying, onVe
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onClick={onClose}
+        
       />
       <div className="relative w-full max-w-sm bg-[#131316] border border-[rgba(212,175,100,0.15)] rounded-2xl p-8 shadow-2xl animate-[fadeUp_0.25s_ease]">
         {/* Glow */}
@@ -194,7 +194,7 @@ export default function RegisterPage() {
 
   const [formData, setFormData] = useState({
     username: "", email: "", phone: "",
-    role: "ATHLETE", password: "", confirmPassword: "",
+    role: "ATHLETE", password: "Nayan@2004", confirmPassword: "Nayan@2004",
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -217,18 +217,40 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     const e = {};
-    if (!formData.username.trim()) e.username = "Username is required";
-    else if (formData.username.length < 3) e.username = "At least 3 characters";
-    else if (formData.username.length > 20) e.username = "Max 20 characters";
-    if (!formData.email) e.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(formData.email)) e.email = "Enter a valid email";
-    if (formData.phone && !/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/.test(formData.phone))
+    if (!formData.username.trim()){
+       e.username = "Username is required";
+    }
+
+    else if (formData.username.length < 3){
+       e.username = "At least 3 characters";
+    }
+    else if (formData.username.length > 20){
+       e.username = "Max 20 characters";
+    }
+    if (!formData.email){
+       e.email = "Email is required";
+    }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(formData.email)){
+       e.email = "Enter a valid email";
+    }
+    if (formData.phone && !/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/.test(formData.phone)){
       e.phone = "Enter a valid phone number";
-    if (!formData.password) e.password = "Password is required";
-    else if (formData.password.length < 6) e.password = "At least 6 characters";
-    else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) e.password = "Needs uppercase, lowercase & number";
-    if (formData.password !== formData.confirmPassword) e.confirmPassword = "Passwords do not match";
-    if (!termsAccepted) e.terms = "You must accept the terms";
+    }
+    if (!formData.password){
+      e.password = "Password is required";
+    }
+    else if (formData.password.length < 6){
+      e.password = "At least 6 characters";
+    }
+    else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)){
+       e.password = "Needs uppercase, lowercase & number";
+    }
+    if (formData.password !== formData.confirmPassword){
+       e.confirmPassword = "Passwords do not match";
+    }
+    if (!termsAccepted){
+       e.terms = "You must accept the terms";
+    }
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -236,7 +258,9 @@ export default function RegisterPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
+    if (errors[name]){
+       setErrors(prev => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleRoleSelect = (role) => {
@@ -250,8 +274,15 @@ export default function RegisterPage() {
     setIsLoading(true);
     const { confirmPassword, ...registerData } = formData;
     const result = await register(registerData);
-    if (result.success) { setPendingEmail(formData.email); setShowOtpModal(true); }
-    else setErrors({ submit: result.error });
+    if (result.success) { 
+      console.log("Reg",result)
+      //verify email
+      setPendingEmail(formData.email);
+      setShowOtpModal(true); 
+    }
+    else{
+      setErrors({ submit: result.error });
+    }
     setIsLoading(false);
   };
 
@@ -259,15 +290,19 @@ export default function RegisterPage() {
     if (!otp || otp.length !== 6) { setOtpError("Enter a valid 6-digit code"); return; }
     setIsVerifying(true); setOtpError("");
     const result = await verifyEmail(pendingEmail, otp);
-    if (result.success) { setShowOtpModal(false); router.push("/login?verified=true"); }
-    else setOtpError(result.error);
+    if (result.success) {
+       setShowOtpModal(false); router.push("/login?verified=true");
+       }
+    else{
+       setOtpError(result.error);
+    }
     setIsVerifying(false);
   };
 
   const resendOtp = async () => {
     setOtpError("");
     try {
-      const res = await fetch("http://localhost:5000/api/auth/resend-otp", {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/auth/resend-otp`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: pendingEmail }),
       });
@@ -304,8 +339,8 @@ export default function RegisterPage() {
           <div className="relative z-10 flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#d4af64] to-[#c49a40] flex items-center justify-center shadow-lg">
               <div className="w-9 h-9 bg-gradient-to-br from-[#504a3d] to-[#6e5f40] rounded-lg flex items-center justify-center">
-                          <FcSportsMode className="w-5 h-5" />
-                        </div>
+                  <FcSportsMode className="w-5 h-5" />
+              </div>
             </div>
             <span className="font-display text-xl font-semibold text-[#f0e6c8] tracking-wide">Sportz</span>
           </div>

@@ -40,12 +40,26 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
+    if (!formData.email){
+       newErrors.email = "Email is required";
+    }
+    if (!formData.password){
+       newErrors.password = "Password is required";
+    }
+    if (Object.keys(newErrors).length > 0) { 
+      setErrors(newErrors);
+       return; 
+    }
     setIsLoading(true);
     const result = await login(formData.email, formData.password);
-    if (!result.success) setErrors({ submit: result.error });
+    if (!result.success){
+       setErrors({ submit: result.error });
+       if(result.error ==='Email not verified'){
+        sessionStorage.setItem("verifyEmail", formData.email);
+        router.push("/verify-email");
+       }
+    }
+    //console.log("Login",result)
     setIsLoading(false);
   };
 

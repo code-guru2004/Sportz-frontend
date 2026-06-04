@@ -237,7 +237,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyEmail = async (email, otp) => {
     try {
-      console.log("Verifying email with:", { email, otp });
+      //console.log("Verifying email with:", { email, otp });
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-email`, { email, otp }, {
         withCredentials: true,
       });

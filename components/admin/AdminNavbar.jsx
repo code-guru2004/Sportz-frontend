@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FcSportsMode } from "react-icons/fc";
 
 export default function AdminNavbar({ user, logout }) {
   const pathname = usePathname();
@@ -13,13 +14,13 @@ export default function AdminNavbar({ user, logout }) {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/admin/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#d4af64] to-[#c49a40] rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
-              <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-                <path d="M9 2L11.5 7H16.5L12.5 10.5L14 15.5L9 12.5L4 15.5L5.5 10.5L1.5 7H6.5L9 2Z" fill="#0c0c0e"/>
-              </svg>
-            </div>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#d4af64] to-[#c49a40] flex items-center justify-center shadow-lg">
+                          <div className="w-9 h-9 bg-gradient-to-br from-[#504a3d] to-[#6e5f40] rounded-lg flex items-center justify-center">
+                              <FcSportsMode className="w-5 h-5" />
+                          </div>
+                        </div>
             <span className="font-display text-xl font-semibold text-[#f0e6c8] tracking-wide">
-              Veritas <span className="text-[#d4af64] text-sm font-body font-normal ml-1">Admin</span>
+              Sportz <span className="text-[#d4af64] text-sm font-body font-normal ml-1">Admin</span>
             </span>
           </Link>
 
