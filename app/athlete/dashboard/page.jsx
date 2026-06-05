@@ -336,7 +336,7 @@ export default function AthleteDashboard() {
                       const daysLeft = getDaysLeft(event.date);
                       return (
                         <div 
-                          key={event._id} 
+                          key={event.id} 
                           className="flex items-start gap-4 p-4 bg-[rgba(255,255,255,0.02)] rounded-xl border border-[rgba(212,175,100,0.05)] hover:border-[rgba(212,175,100,0.15)] transition-all duration-300"
                         >
                           <div className="w-10 h-10 rounded-lg bg-[rgba(212,175,100,0.1)] flex items-center justify-center flex-shrink-0">

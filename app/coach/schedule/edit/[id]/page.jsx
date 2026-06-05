@@ -165,8 +165,16 @@ export default function EditSchedulePage() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+  
+    setFormData(prev => ({
+      ...prev,
+      [name]:
+        type === "number"
+          ? (value === "" ? "" : Number(value))
+          : value,
+    }));
+  
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -180,6 +188,7 @@ export default function EditSchedulePage() {
     setIsLoading(true);
     
     try {
+      console.log("foemdata",formData)
       const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/schedules/${scheduleId}`, formData, {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true,

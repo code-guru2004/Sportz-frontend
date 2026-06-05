@@ -38,6 +38,7 @@ import { FaFacebookSquare } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaInstagramSquare } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
+import { FcSportsMode } from "react-icons/fc";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -145,12 +146,12 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#d4af64] to-[#c49a40] rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
-                <Trophy className="w-4 h-4 text-[#0c0c0e]" />
-              </div>
-              <span className="font-display text-xl font-semibold text-[#f0e6c8] tracking-wide">
-                Veritas Sports
-              </span>
+             <div className="relative z-10 flex items-center gap-2.5">
+                       <div className="w-9 h-9 bg-gradient-to-br from-[#504a3d] to-[#6e5f40] rounded-lg flex items-center justify-center">
+                         <FcSportsMode className="w-5 h-5" />
+                       </div>
+                       <span className="font-['Cormorant_Garamond',serif] text-xl font-semibold text-[#f0e6c8] tracking-wide">Sportz</span>
+                     </div>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">

@@ -8,7 +8,7 @@ export async function POST(req) {
     const { email, name, otp } = await req.json();
 
     await transporter.sendMail({
-      from: `"Your App Name" <${process.env.EMAIL_USER}>`,
+      from: `"Sportz" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Verify Your Email",
       html: verificationOtpTemplate({name,otp}),
